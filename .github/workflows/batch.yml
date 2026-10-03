@@ -68,4 +68,7 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: root
         run: |
-          java -jar target/employee-batch-processor-*.jar
+          java -jar target/employee-batch-processor-*.jar \
+            fileName=employee-summary.csv \
+            run.id=$(date +%s) \
+            --spring.main.web-application-type=none
