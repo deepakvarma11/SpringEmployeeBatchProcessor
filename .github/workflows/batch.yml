@@ -50,6 +50,12 @@ jobs:
       - name: Build application
         run: mvn clean package -DskipTests
 
+      - name: initialize database
+        run: |
+          docker exec $(docker ps -q --filter ancestor=mysql:8.4) \
+          mysql -uroot -proot spring_batch_demo \
+          < src/main/resources/Queries/StandardbatchjobTables.sql
+
       - name: Run Employee Batch job
         run: |
           java -jar target/employee-batch-processor-*.jar
