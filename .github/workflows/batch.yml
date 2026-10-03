@@ -52,10 +52,20 @@ jobs:
 
       - name: initialize database
         run: |
-          docker exec $(docker ps -q --filter ancestor=mysql:8.4) \
+          docker exec -i $(docker ps -q --filter ancestor=mysql:8.4) \
           mysql -uroot -proot spring_batch_demo \
           < src/main/resources/Queries/StandardbatchjobTables.sql
 
+      - name: Verify database tables
+        run: |
+          docker exec $(docker ps -q --filter ancestor=mysql:8.4) \
+          mysql -uroot -proot spring_batch_demo \
+          -e "SHOW TABLES;"
+
       - name: Run Employee Batch job
+        env:
+          DB_URL: jdbc:mysql://localhost:3306/spring_batch_demo
+          DB_USERNAME: root
+          DB_PASSWORD: root
         run: |
           java -jar target/employee-batch-processor-*.jar
